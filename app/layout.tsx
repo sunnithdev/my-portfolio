@@ -8,7 +8,7 @@ import Head from 'next/head'
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Your Name - Software Developer",
+  title: "Sunnith Dev - Software Developer",
   description: "Portfolio website showcasing my software development projects and skills",
 }
 
