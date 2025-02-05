@@ -1,6 +1,5 @@
 "use client"
 import { motion } from "framer-motion"
-import Link from "next/link"
 
 const Contact = () => {
   return (
@@ -18,7 +17,7 @@ const Contact = () => {
             I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to discuss a
             project or just say hello!
           </p>
-          <Link href="/contact">
+          <a href="mailto:sunnithdev@gmail.com">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -26,7 +25,7 @@ const Contact = () => {
             >
               Contact Me
             </motion.button>
-          </Link>
+          </a>
         </motion.div>
       </div>
     </section>

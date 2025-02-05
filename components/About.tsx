@@ -15,16 +15,16 @@ const About = () => {
         >
           <h2 className="text-3xl font-bold mb-8">About Me</h2>
           <p className="text-lg mb-6 text-gray-300">
-            I'm a passionate software developer with expertise in web technologies. I love creating modern, efficient,
-            and user-friendly applications that solve real-world problems.
+            I'm Sunnith Kumar Chinthapally, a passionate Full Stack Developer with experience in building scalable web
+            applications and modern user experiences. I specialize in technologies like React, Next.js, Node.js, and Supabase.
           </p>
           <p className="text-lg mb-6 text-gray-300">
-            My skills include React, Next.js, Node.js, and various other tools and frameworks in the JavaScript
-            ecosystem. I'm always eager to learn new technologies and improve my craft.
+            I enjoy solving challenging problems and developing innovative solutions that make an impact. Whether it's
+            front-end interfaces or back-end APIs, I'm driven to create clean, efficient, and maintainable code.
           </p>
           <p className="text-lg text-gray-300">
-            When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or
-            enjoying the great outdoors.
+            Outside of work, I love exploring new tech, contributing to open-source projects, and constantly learning new skills to
+            stay ahead in the ever-evolving tech world.
           </p>
           <Link
             href="/about"
