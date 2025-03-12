@@ -15,16 +15,13 @@ const About = () => {
         >
           <h2 className="text-3xl font-bold mb-8">About Me</h2>
           <p className="text-lg mb-6 text-gray-300">
-            I'm Sunnith Kumar Chinthapally, a passionate Full Stack Developer with experience in building scalable web
-            applications and modern user experiences. I specialize in technologies like React, Next.js, Node.js, and Supabase.
+            I'm Sunnith Kumar Chinthapally, a Full Stack Developer with 3+ years of hands-on experience crafting web and mobile applications. My technical toolkit includes React, Angular, Node.js, Next.js, and NestJS for building responsive frontends and robust backend services.
           </p>
           <p className="text-lg mb-6 text-gray-300">
-            I enjoy solving challenging problems and developing innovative solutions that make an impact. Whether it's
-            front-end interfaces or back-end APIs, I'm driven to create clean, efficient, and maintainable code.
+            My work involves developing web and mobile applications that solve real-world problems, backed by cloud-native systems using AWS, Supabase, and No-code tools. I'm passionate about integrating Gen AI technologies into these solutions to enhance user experiences and create more intelligent applications.
           </p>
           <p className="text-lg text-gray-300">
-            Outside of work, I love exploring new tech, contributing to open-source projects, and constantly learning new skills to
-            stay ahead in the ever-evolving tech world.
+            I'm particularly interested in Gen AI. When I'm not coding, you'll find me exploring X.com, contributing to GitHub discussions, or experimenting with the latest web technologies.
           </p>
           <Link
             href="/about"

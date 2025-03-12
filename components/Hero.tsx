@@ -29,7 +29,7 @@ const Hero = () => {
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
           className="text-lg md:text-xl text-gray-300 mb-8"
         >
-          I create things on web and mobile
+          I create things on web.
         </motion.p>
         <motion.a
           initial={{ y: 50, opacity: 0 }}

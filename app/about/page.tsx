@@ -2,29 +2,32 @@
 import { motion } from "framer-motion"
 
 export default function AboutPage() {
-  const skills = ["React", "Next.js", "TypeScript", "Node.js", "Supabase", "Firebase", "NestJS", "AWS", "Go", "Redis"]
+  const skills = [
+    "React", "Next.js", "TypeScript", "Node.js", "Angular", "NestJS", 
+    "AWS", "Supabase", "PostgreSQL", "MongoDB", "Redis", "LangChain", 
+    "OpenAI", "TensorFlow", "Serverless"
+  ]
 
   const experiences = [
-
     {
-      company: "Freelance",
-      role: "Full Stack Developer",
+      company: "Freelancer",
+      role: "Software Developer",
       period: "December 2022 – Present",
-      description: "Built real-time chat applications and developed modern web apps using Next.js, Supabase, and Drizzle ORM.",
+      description: "Built a real-time multilingual chat app using React, Redux, Socket.io, NestJS, and Google Translate API, deployed on AWS with Supabase. Developed AI-driven web apps with Next.js, Supabase, and Drizzle ORM to enhance user experiences.",
       color: "#FFD93D"
     },
     {
       company: "Kalgudi Digital",
       role: "Software Engineer",
       period: "April 2021 – January 2023",
-      description: "Developed cross-platform e-commerce applications using Angular and React. Built scalable microservices and APIs with Node.js and AWS Serverless.",
+      description: "Led development of cross-platform e-commerce apps using Angular/React, implementing state management with NgRx and RxJS. Built microservices with Node.js, PostgreSQL, and AWS Lambda, achieving 99.9% uptime for backend APIs. Automated deployment pipelines using Jenkins, AWS, Docker.",
       color: "#FF6B6B"
     },
     {
       company: "Vasudhaika Software Solutions",
-      role: "Web Developer Intern",
+      role: "Web Developer, Intern",
       period: "December 2020 – March 2021",
-      description: "Built websites using HTML, CSS, JavaScript, and deployed them on cloud platforms like Netlify and AWS.",
+      description: "Developed 5+ responsive websites using Figma, HTML/CSS, JavaScript, and deployed via Netlify/Heroku. Utilized Shopify/Webflow for e-commerce platforms, integrating Google Analytics for SEO tracking.",
       color: "#4ECDC4"
     },
   ]
@@ -38,13 +41,19 @@ export default function AboutPage() {
           className="max-w-4xl mx-auto"
         >
           <h1 className="text-4xl font-bold mb-8 text-white">About Me</h1>
-          <p className="text-lg text-gray-300 mb-12">
-            Hi, I’m Sunnith Kumar Chinthapally, a Full Stack Developer with experience building web and mobile applications. I specialize in React, Next.js, and Node.js, with a focus on delivering modern, scalable solutions.
+          <p className="text-lg mb-6 text-gray-300">
+            I'm Sunnith Kumar Chinthapally, a Full Stack Developer with 3+ years of hands-on experience crafting web and mobile applications. My technical toolkit includes React, Angular, Node.js, Next.js, and NestJS for building responsive frontends and robust backend services.
+          </p>
+          <p className="text-lg mb-6 text-gray-300">
+            My work involves developing web and mobile applications that solve real-world problems, backed by cloud-native systems using AWS, Supabase, and PostgreSQL. I'm passionate about integrating Gen AI technologies into these solutions to enhance user experiences and create more intelligent applications.
+          </p>
+          <p className="text-lg mb-12 text-gray-300">
+            I enjoy working with serverless architectures and have implemented AI-driven features using OpenAI and LangChain. When I'm not coding, you'll find me exploring new frameworks, contributing to open-source, or experimenting with emerging technologies to stay ahead in this rapidly evolving field.
           </p>
 
           {/* Skills Section */}
-          <h2 className="text-2xl font-bold text-white mb-8">Skills</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <h2 className="text-2xl font-bold text-white mb-8">Technical Skills</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {skills.map((skill, index) => (
               <motion.div
                 key={skill}

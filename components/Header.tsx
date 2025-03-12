@@ -29,7 +29,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href="#contact" className="text-gray-300 hover:text-white transition-colors">
+            <Link href="/#contact" className="text-gray-300 hover:text-white transition-colors">
               Contact
             </Link>
           </li>
