@@ -44,7 +44,7 @@ const Hero = () => {
       
       <div className="absolute bottom-16 flex space-x-6">
         <motion.a
-          href="https://twitter.com/yourusername" // Replace with your Twitter URL
+          href="https://twitter.com/sunnithdev" // Replace with your Twitter URL
           target="_blank"
           rel="noopener noreferrer"
           initial={{ y: 50, opacity: 0 }}
@@ -55,7 +55,7 @@ const Hero = () => {
           <Twitter size={32} />
         </motion.a>
         <motion.a
-          href="https://linkedin.com/in/yourusername" // Replace with your LinkedIn URL
+          href="https://linkedin.com/in/sunnith-ch" // Replace with your LinkedIn URL
           target="_blank"
           rel="noopener noreferrer"
           initial={{ y: 50, opacity: 0 }}
@@ -66,7 +66,7 @@ const Hero = () => {
           <Linkedin size={32} />
         </motion.a>
         <motion.a
-          href="https://github.com/yourusername" // Replace with your GitHub URL
+          href="https://github.com/sunnithdev" // Replace with your GitHub URL
           target="_blank"
           rel="noopener noreferrer"
           initial={{ y: 50, opacity: 0 }}
