@@ -28,6 +28,8 @@ export default function RootLayout({
           <Header />
           {children}
         </div>
+      <script src="https://cdn.peasy.so/peasy.js" data-website-id="01jrc53y3rn23cssfdqdjckzhr" async></script>
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="c7ab68da-18ee-4080-aefa-a222ee4836a4"></script>
       </body>
     </html>
   )
