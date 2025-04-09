@@ -29,6 +29,7 @@ export default function RootLayout({
           {children}
         </div>
       <script src="https://cdn.peasy.so/peasy.js" data-website-id="01jrc53y3rn23cssfdqdjckzhr" async></script>
+      <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ee3895ba868645c7a8cfa0334162f2a5"}'></script>
       <script defer src="https://cloud.umami.is/script.js" data-website-id="c7ab68da-18ee-4080-aefa-a222ee4836a4"></script>
       </body>
     </html>
