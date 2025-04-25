@@ -1,9 +1,15 @@
 "use client"
 import { motion } from "framer-motion"
 import { ChevronDown } from "lucide-react"
-import { Twitter, Linkedin, Github } from "lucide-react" // Import social icons
+import { Twitter, Linkedin, Github } from "lucide-react"
+import { useRef } from "react"
 
 const Hero = () => {
+
+  const aboutRef = useRef<HTMLElement>(null)
+  const scrollToAbout = () => {
+    aboutRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
   return (
     <section className="h-screen flex flex-col items-center justify-center relative z-10">
       <div className="text-center">
@@ -41,41 +47,47 @@ const Hero = () => {
           View My Work
         </motion.a>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+          className="absolute bottom-24 left-0 right-0 flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
+            className="cursor-pointer"
+            onClick={scrollToAbout}
+          >
+            <ChevronDown className="mx-auto text-white-500 size-8" />
+          </motion.div>
+        </motion.div>
       
-      <div className="absolute bottom-16 flex space-x-6">
-        <motion.a
-          href="https://twitter.com/sunnithdev" // Replace with your Twitter URL
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-          className="text-white hover:text-gray-300"
-        >
-          <Twitter size={32} />
-        </motion.a>
-        <motion.a
-          href="https://linkedin.com/in/sunnith-ch" // Replace with your LinkedIn URL
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-          className="text-white hover:text-gray-300"
-        >
-          <Linkedin size={32} />
-        </motion.a>
-        <motion.a
-          href="https://github.com/sunnithdev" // Replace with your GitHub URL
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9, ease: "easeOut" }}
-          className="text-white hover:text-gray-300"
-        >
-          <Github size={32} />
-        </motion.a>
+      {/* Fixed social icons at bottom */}
+      <div className="fixed bottom-8 left-0 right-0 flex justify-center space-x-8 z-50">
+        {["twitter", "linkedin", "github"].map((platform, i) => (
+          <motion.a
+            key={platform}
+            href={`https://${platform}.com/${platform === "twitter" ? "sunnithdev" : platform === "linkedin" ? "in/sunnith-ch" : "sunnithdev"}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+            className="text-white/70 hover:text-white transition-colors duration-300"
+            whileHover={{ y: -3 }}
+          >
+            {platform === "twitter" ? (
+              <Twitter size={40} />
+            ) : platform === "linkedin" ? (
+              <Linkedin size={40} />
+            ) : (
+              <Github size={40} />
+            )}
+          </motion.a>
+        ))}
       </div>
 
       {/* <motion.div

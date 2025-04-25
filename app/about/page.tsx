@@ -5,7 +5,7 @@ export default function AboutPage() {
   const skills = [
     "React", "Next.js", "TypeScript", "Node.js", "Angular", "NestJS", 
     "AWS", "Supabase", "PostgreSQL", "MongoDB", "Redis", "LangChain", 
-    "OpenAI", "TensorFlow", "Serverless"
+    "OpenAI", "TensorFlow", "Serverless", "FastAPI", "Drizzle ORM", "Ionic"
   ]
 
   const experiences = [
@@ -13,23 +13,26 @@ export default function AboutPage() {
       company: "Freelancer",
       role: "Software Developer",
       period: "December 2022 – Present",
-      description: "Built a real-time multilingual chat app using React, Redux, Socket.io, NestJS, and Google Translate API, deployed on AWS with Supabase. Developed AI-driven web apps with Next.js, Supabase, and Drizzle ORM to enhance user experiences.",
+      description:
+        "Delivered full-stack projects for 8+ clients in Toronto. Built a multilingual real-time chat app using React, Redux, Socket.io, and NestJS, powered by Google Translate API. Developed AI-driven apps with Next.js, Drizzle ORM, and Supabase. Created analytics dashboards with FastAPI, secure APIs, and role-based access. Helped launch Ivy Coffee Shop’s online presence. Also collaborated with Siemens as a freelancer, building a web portal using Angular 14 and Djongo on the backend, working in a small 4-member team.",
       color: "#FFD93D"
-    },
+    },    
     {
       company: "Kalgudi Digital",
       role: "Software Engineer",
       period: "April 2021 – January 2023",
-      description: "Led development of cross-platform e-commerce apps using Angular/React, implementing state management with NgRx and RxJS. Built microservices with Node.js, PostgreSQL, and AWS Lambda, achieving 99.9% uptime for backend APIs. Automated deployment pipelines using Jenkins, AWS, Docker.",
+      description:
+        "Owned frontend and backend development of cross-platform e-commerce solutions using Angular/React. Used NgRx and RxJS for state management and built backend microservices with Node.js, PostgreSQL, and AWS Lambda. Deployed with Docker and automated CI/CD using Jenkins.",
       color: "#FF6B6B"
     },
     {
       company: "Vasudhaika Software Solutions",
       role: "Web Developer, Intern",
       period: "December 2020 – March 2021",
-      description: "Developed 5+ responsive websites using Figma, HTML/CSS, JavaScript, and deployed via Netlify/Heroku. Utilized Shopify/Webflow for e-commerce platforms, integrating Google Analytics for SEO tracking.",
+      description:
+        "Built and deployed 5+ responsive websites using Figma, HTML/CSS, JavaScript. Integrated Shopify and Webflow for e-commerce, and used Google Analytics for SEO and user insights.",
       color: "#4ECDC4"
-    },
+    }
   ]
 
   return (
@@ -42,13 +45,19 @@ export default function AboutPage() {
         >
           <h1 className="text-4xl font-bold mb-8 text-white">About Me</h1>
           <p className="text-lg mb-6 text-gray-300">
-            I'm Sunnith Kumar Chinthapally, a Full Stack Developer with 3+ years of hands-on experience crafting web and mobile applications. My technical toolkit includes React, Angular, Node.js, Next.js, and NestJS for building responsive frontends and robust backend services.
+            I'm Sunnith Kumar Chinthapally — a Full Stack Developer with 3+ years of experience building practical, user-focused apps. I love turning complex ideas into clean digital products and have worked with startups, agencies, and solo founders to bring projects to life.
           </p>
           <p className="text-lg mb-6 text-gray-300">
-            My work involves developing web and mobile applications that solve real-world problems, backed by cloud-native systems using AWS, Supabase, and PostgreSQL. I'm passionate about integrating Gen AI technologies into these solutions to enhance user experiences and create more intelligent applications.
+            My stack revolves around React, Angular, Node.js, and NestJS. Recently, I’ve leaned heavily into building with Next.js, Supabase, Drizzle ORM, and shadcn/ui to create polished modern experiences. I'm also experimenting with Gen AI tools like OpenAI and LangChain to build intelligent interfaces and tools.
+          </p>
+          <p className="text-lg mb-6 text-gray-300">
+            I’ve built real-time apps, booking platforms, and analytics dashboards using FastAPI, secure APIs, and cloud-native infrastructure. I'm also the person behind digital presence for places like Ivy Coffee in Toronto — think websites, strategy, and making it all feel cohesive.
+          </p>
+          <p className="text-lg mb-6 text-gray-300">
+            I studied Web Development at Conestoga College, and I thrive best in collaborative, in-person team environments. Whether it's a side project like a real estate insights tool or a coffee chat booking app, I'm all about launching fast, building with intent, and making things work well.
           </p>
           <p className="text-lg mb-12 text-gray-300">
-            I enjoy working with serverless architectures and have implemented AI-driven features using OpenAI and LangChain. When I'm not coding, you'll find me exploring new frameworks, contributing to open-source, or experimenting with emerging technologies to stay ahead in this rapidly evolving field.
+            Outside work, I share tech thoughts on <a href="https://x.com/Sunnithdev" className="text-blue-400 underline" target="_blank">X</a>, contribute to open-source, and explore whatever’s next in AI and web dev.
           </p>
 
           {/* Skills Section */}
