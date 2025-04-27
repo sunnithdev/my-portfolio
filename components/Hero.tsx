@@ -19,7 +19,7 @@ const Hero = () => {
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-4xl md:text-6xl font-bold mb-4"
         >
-          Sunnith Dev
+          Sunnith
         </motion.h1>
         <motion.p
           initial={{ y: 50, opacity: 0 }}
