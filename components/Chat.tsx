@@ -68,6 +68,7 @@ const Chat = () => {
     setTimeout(() => scrollToBottom(), 50)
 
     try {
+      console.log('Sending chat request...')
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -81,12 +82,25 @@ const Chat = () => {
         }),
       })
 
+      console.log('Response status:', response.status)
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+      
+      const data = await response.json()
+      console.log('Response data:', data)
+      
       if (!response.ok) {
-        throw new Error('Failed to get response')
+        // Handle API errors with specific messages
+        console.error('API error:', data)
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.error || data.details || "Sorry, I'm having trouble responding right now. Please try again later!",
+          timestamp: new Date()
+        }
+        setMessages(prev => [...prev, errorMessage])
+        return
       }
 
-      const data = await response.json()
-      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

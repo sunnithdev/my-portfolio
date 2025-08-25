@@ -177,18 +177,28 @@ export async function POST(req: NextRequest) {
         },
         { 
           status: 429,
-          headers: {
-            'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
-            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-            'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
-            'Retry-After': Math.ceil((rateLimit.resetTime - Date.now()) / 1000).toString()
-          }
+                  headers: {
+          'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+          'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
+        }
         }
       );
     }
 
     const { messages } = await req.json();
     
+    // Validate messages
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      console.error('Invalid or empty messages array:', messages);
+      return NextResponse.json(
+        { error: 'Invalid message format' },
+        { status: 400 }
+      );
+    }
+
+    console.log('Processing chat request with messages:', messages.length);
+
     // Remove the duplicate check since we already checked above
     // if (!process.env.GOOGLE_AI_API_KEY) {
     //   return NextResponse.json(
@@ -223,6 +233,8 @@ export async function POST(req: NextRequest) {
       });
     });
 
+    console.log('Starting chat with conversation history length:', conversationHistory.length);
+
     // Start a new chat with the conversation history
     const chat = model.startChat({
       history: conversationHistory,
@@ -234,9 +246,13 @@ export async function POST(req: NextRequest) {
 
     // Send the last user message to get a response
     const lastUserMessage = messages[messages.length - 1];
+    console.log('Sending message to Google AI:', lastUserMessage.content);
+    
     const result = await chat.sendMessage(lastUserMessage.content);
     const response = await result.response;
     const text = response.text();
+
+    console.log('Received response from Google AI, length:', text.length);
 
     return NextResponse.json(
       { response: text },
@@ -250,8 +266,45 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error('Chat API error:', error);
+    
+    // More specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes('API_KEY_INVALID') || error.message.includes('API key')) {
+        return NextResponse.json(
+          { 
+            error: 'Invalid Google AI API key',
+            details: 'The provided API key is not valid. Please check your configuration.'
+          },
+          { status: 401 }
+        );
+      }
+      
+      if (error.message.includes('quota') || error.message.includes('limit')) {
+        return NextResponse.json(
+          { 
+            error: 'API quota exceeded',
+            details: 'You have exceeded your Google AI API quota. Please check your usage limits.'
+          },
+          { status: 429 }
+        );
+      }
+      
+      if (error.message.includes('network') || error.message.includes('timeout')) {
+        return NextResponse.json(
+          { 
+            error: 'Network error',
+            details: 'Unable to connect to Google AI service. Please try again later.'
+          },
+          { status: 503 }
+        );
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Sorry, I\'m having trouble responding right now. Please try again later!',
+        details: error instanceof Error ? error.message : 'Unknown error occurred'
+      },
       { status: 500 }
     );
   }
