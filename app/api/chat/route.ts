@@ -1,6 +1,45 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Rate limiting storage (in production, use Redis or database)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+// Rate limit configuration
+const RATE_LIMIT_MAX = 10; // Maximum requests per window
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute window in milliseconds
+
+// Cleanup expired rate limit entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of rateLimitStore.entries()) {
+    if (now > value.resetTime) {
+      rateLimitStore.delete(key);
+    }
+  }
+}, 5 * 60 * 1000);
+
+// Rate limiting function
+function checkRateLimit(identifier: string): { allowed: boolean; remaining: number; resetTime: number } {
+  const now = Date.now();
+  const userLimit = rateLimitStore.get(identifier);
+  
+  if (!userLimit || now > userLimit.resetTime) {
+    // Reset or create new rate limit window
+    rateLimitStore.set(identifier, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: RATE_LIMIT_MAX - 1, resetTime: now + RATE_LIMIT_WINDOW };
+  }
+  
+  if (userLimit.count >= RATE_LIMIT_MAX) {
+    return { allowed: false, remaining: 0, resetTime: userLimit.resetTime };
+  }
+  
+  // Increment count
+  userLimit.count++;
+  rateLimitStore.set(identifier, userLimit);
+  
+  return { allowed: true, remaining: RATE_LIMIT_MAX - userLimit.count, resetTime: userLimit.resetTime };
+}
+
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
 
 const systemPrompt = `IMPORTANT: You are now Sunnith Kumar Chinthapally, a Full Stack Developer with over 3 years of experience. You are NOT an AI assistant - you ARE Sunnith. When someone asks "who are you" or similar questions, respond as Sunnith would, not as an AI.
@@ -90,6 +129,32 @@ Here are your details:
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limiting check
+    const identifier = req.headers.get('x-forwarded-for') || 
+                     req.headers.get('x-real-ip') || 
+                     'unknown';
+    
+    const rateLimit = checkRateLimit(identifier);
+    
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Rate limit exceeded', 
+          remaining: rateLimit.remaining,
+          resetTime: new Date(rateLimit.resetTime).toISOString()
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
+            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+            'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
+            'Retry-After': Math.ceil((rateLimit.resetTime - Date.now()) / 1000).toString()
+          }
+        }
+      );
+    }
+
     const { messages } = await req.json();
     
     if (!process.env.GOOGLE_AI_API_KEY) {
@@ -140,7 +205,16 @@ export async function POST(req: NextRequest) {
     const response = await result.response;
     const text = response.text();
 
-    return NextResponse.json({ response: text });
+    return NextResponse.json(
+      { response: text },
+      {
+        headers: {
+          'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+          'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
+        }
+      }
+    );
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
