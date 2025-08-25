@@ -99,14 +99,6 @@ const Hero = () => {
         >
           Software Developer
         </motion.p>
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="mb-8"
-        >
-          <Chat />
-        </motion.div>
         <motion.a
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -116,13 +108,12 @@ const Hero = () => {
         >
           View My Work
         </motion.a>
-        
         {/* Social icons below Software Developer for mobile/tablet */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1 }}
-          className="mt-8 flex justify-center space-x-6"
+          className="m-8 flex justify-center space-x-6"
         >
           {["twitter", "linkedin", "github"].map((platform, i) => (
             <motion.a
@@ -143,6 +134,14 @@ const Hero = () => {
               )}
             </motion.a>
           ))}
+        </motion.div>
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+          className="mb-8"
+        >
+          <Chat />
         </motion.div>
       </div>
 

@@ -133,8 +133,8 @@ const Chat = () => {
             <MessageCircle className="w-4 h-4 text-gray-300" />
           </div>
           <div>
-            <h3 className="text-base font-medium text-white">Chat with Sunnith</h3>
-            <p className="text-xs text-gray-500">Ask me anything about my work, projects, or experience!</p>
+            <h3 className="text-base text-left font-medium text-white">Chat with Sunnith</h3>
+            <p className="text-xs text-gray-500 text-left">Ask me anything about my work, projects, or experience!</p>
           </div>
         </div>
 
@@ -163,7 +163,7 @@ const Chat = () => {
                         ? 'bg-gray-700 text-white' 
                         : 'bg-gray-900 text-white'
                     }`}>
-                      <p className="text-sm leading-relaxed">{message.content}</p>
+                      <p className="text-sm leading-relaxed text-left">{message.content}</p>
                     </div>
                     <p className={`text-xs text-gray-500 mt-1 ${
                       message.role === 'user' ? 'text-right' : 'text-left'
