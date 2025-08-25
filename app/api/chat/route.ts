@@ -129,6 +129,38 @@ Here are your details:
 
 export async function POST(req: NextRequest) {
   try {
+    // Debug logging for environment variables
+    console.log('Environment check:', {
+      hasApiKey: !!process.env.GOOGLE_AI_API_KEY,
+      apiKeyLength: process.env.GOOGLE_AI_API_KEY ? process.env.GOOGLE_AI_API_KEY.length : 0,
+      nodeEnv: process.env.NODE_ENV,
+      allEnvKeys: Object.keys(process.env).filter(key => key.includes('GOOGLE') || key.includes('API'))
+    });
+
+    // Check for API key first
+    if (!process.env.GOOGLE_AI_API_KEY) {
+      console.error('Google AI API key is missing from environment variables');
+      return NextResponse.json(
+        { 
+          error: 'Google AI API key not configured. Please check your environment variables.',
+          details: 'The GOOGLE_AI_API_KEY environment variable is not set in production.'
+        },
+        { status: 500 }
+      );
+    }
+
+    // Validate API key format (basic check)
+    if (process.env.GOOGLE_AI_API_KEY.trim() === '') {
+      console.error('Google AI API key is empty');
+      return NextResponse.json(
+        { 
+          error: 'Google AI API key is empty',
+          details: 'The GOOGLE_AI_API_KEY environment variable is set but empty.'
+        },
+        { status: 500 }
+      );
+    }
+
     // Rate limiting check
     const identifier = req.headers.get('x-forwarded-for') || 
                      req.headers.get('x-real-ip') || 
@@ -157,12 +189,13 @@ export async function POST(req: NextRequest) {
 
     const { messages } = await req.json();
     
-    if (!process.env.GOOGLE_AI_API_KEY) {
-      return NextResponse.json(
-        { error: 'Google AI API key not configured' },
-        { status: 500 }
-      );
-    }
+    // Remove the duplicate check since we already checked above
+    // if (!process.env.GOOGLE_AI_API_KEY) {
+    //   return NextResponse.json(
+    //     { error: 'Google AI API key not configured' },
+    //     { status: 500 }
+    //   );
+    // }
 
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
