@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Rate limiting storage (in production, use Redis or database)
@@ -40,7 +40,10 @@ function checkRateLimit(identifier: string): { allowed: boolean; remaining: numb
   return { allowed: true, remaining: RATE_LIMIT_MAX - userLimit.count, resetTime: userLimit.resetTime };
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 const systemPrompt = `IMPORTANT: You are now Sunnith Kumar Chinthapally, a Full Stack Developer with over 3 years of experience. You are NOT an AI assistant - you ARE Sunnith. When someone asks "who are you" or similar questions, respond as Sunnith would, not as an AI.
 
@@ -118,7 +121,7 @@ Here are your details:
 - Be authentic about your Indian background without being overly cultural
 
 **CRITICAL INSTRUCTIONS:**
-- NEVER mention that you are an AI, Gemini, or any artificial intelligence
+- NEVER mention that you are an AI, ChatGPT, or any artificial intelligence
 - ALWAYS respond as if you are Sunnith Kumar Chinthapally
 - If asked "who are you", say "I'm Sunnith Kumar Chinthapally, a Full Stack Developer from Toronto"
 - If asked about being an AI, redirect the conversation back to your work and experience
@@ -131,31 +134,31 @@ export async function POST(req: NextRequest) {
   try {
     // Debug logging for environment variables
     console.log('Environment check:', {
-      hasApiKey: !!process.env.GOOGLE_AI_API_KEY,
-      apiKeyLength: process.env.GOOGLE_AI_API_KEY ? process.env.GOOGLE_AI_API_KEY.length : 0,
+      hasApiKey: !!process.env.OPENAI_API_KEY,
+      apiKeyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
       nodeEnv: process.env.NODE_ENV,
-      allEnvKeys: Object.keys(process.env).filter(key => key.includes('GOOGLE') || key.includes('API'))
+      allEnvKeys: Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('API'))
     });
 
     // Check for API key first
-    if (!process.env.GOOGLE_AI_API_KEY) {
-      console.error('Google AI API key is missing from environment variables');
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OpenAI API key is missing from environment variables');
       return NextResponse.json(
         { 
-          error: 'Google AI API key not configured. Please check your environment variables.',
-          details: 'The GOOGLE_AI_API_KEY environment variable is not set in production.'
+          error: 'OpenAI API key not configured. Please check your environment variables.',
+          details: 'The OPENAI_API_KEY environment variable is not set in production.'
         },
         { status: 500 }
       );
     }
 
     // Validate API key format (basic check)
-    if (process.env.GOOGLE_AI_API_KEY.trim() === '') {
-      console.error('Google AI API key is empty');
+    if (process.env.OPENAI_API_KEY.trim() === '') {
+      console.error('OpenAI API key is empty');
       return NextResponse.json(
         { 
-          error: 'Google AI API key is empty',
-          details: 'The GOOGLE_AI_API_KEY environment variable is set but empty.'
+          error: 'OpenAI API key is empty',
+          details: 'The OPENAI_API_KEY environment variable is set but empty.'
         },
         { status: 500 }
       );
@@ -177,11 +180,11 @@ export async function POST(req: NextRequest) {
         },
         { 
           status: 429,
-                  headers: {
-          'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
-          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-          'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
-        }
+          headers: {
+            'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
+            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+            'X-RateLimit-Reset': new Date(rateLimit.resetTime).toISOString(),
+          }
         }
       );
     }
@@ -199,63 +202,35 @@ export async function POST(req: NextRequest) {
 
     console.log('Processing chat request with messages:', messages.length);
 
-    // Remove the duplicate check since we already checked above
-    // if (!process.env.GOOGLE_AI_API_KEY) {
-    //   return NextResponse.json(
-    //     { error: 'Google AI API key not configured' },
-    //     { status: 500 }
-    //   );
-    // }
+    // Prepare messages for OpenAI (including system prompt)
+    const openaiMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
+      { role: 'system', content: systemPrompt },
+      ...messages.map((msg: { role: string; content: string }) => ({
+        role: (msg.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: msg.content
+      }))
+    ];
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    console.log('Sending request to OpenAI with messages length:', openaiMessages.length);
 
-    // For Gemini, we need to handle the system prompt differently
-    // We'll create a conversation history that includes the system prompt
-    let conversationHistory = [];
-    
-    // Add system prompt as the first message
-    conversationHistory.push({
-      role: 'user',
-      parts: [{ text: systemPrompt }]
-    });
-    
-    // Add a response from the model acknowledging the system prompt
-    conversationHistory.push({
-      role: 'model',
-      parts: [{ text: "I understand. I am now acting as Sunnith Kumar Chinthapally, a Full Stack Developer from Toronto. I'm ready to answer questions about my work, projects, and experience." }]
-    });
-    
-    // Add all the user messages and AI responses
-    messages.forEach((msg: any) => {
-      conversationHistory.push({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      });
+    // Call OpenAI API
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: openaiMessages,
+      max_tokens: 1000,
+      temperature: 0.7,
     });
 
-    console.log('Starting chat with conversation history length:', conversationHistory.length);
-
-    // Start a new chat with the conversation history
-    const chat = model.startChat({
-      history: conversationHistory,
-      generationConfig: {
-        maxOutputTokens: 1000,
-        temperature: 0.7,
-      },
-    });
-
-    // Send the last user message to get a response
-    const lastUserMessage = messages[messages.length - 1];
-    console.log('Sending message to Google AI:', lastUserMessage.content);
+    const response = completion.choices[0]?.message?.content;
     
-    const result = await chat.sendMessage(lastUserMessage.content);
-    const response = await result.response;
-    const text = response.text();
+    if (!response) {
+      throw new Error('No response from OpenAI');
+    }
 
-    console.log('Received response from Google AI, length:', text.length);
+    console.log('Received response from OpenAI, length:', response.length);
 
     return NextResponse.json(
-      { response: text },
+      { response },
       {
         headers: {
           'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
@@ -272,18 +247,18 @@ export async function POST(req: NextRequest) {
       if (error.message.includes('API_KEY_INVALID') || error.message.includes('API key')) {
         return NextResponse.json(
           { 
-            error: 'Invalid Google AI API key',
+            error: 'Invalid OpenAI API key',
             details: 'The provided API key is not valid. Please check your configuration.'
           },
           { status: 401 }
         );
       }
       
-      if (error.message.includes('quota') || error.message.includes('limit')) {
+      if (error.message.includes('quota') || error.message.includes('limit') || error.message.includes('billing')) {
         return NextResponse.json(
           { 
             error: 'API quota exceeded',
-            details: 'You have exceeded your Google AI API quota. Please check your usage limits.'
+            details: 'You have exceeded your OpenAI API quota or billing is required. Please check your usage limits.'
           },
           { status: 429 }
         );
@@ -293,7 +268,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           { 
             error: 'Network error',
-            details: 'Unable to connect to Google AI service. Please try again later.'
+            details: 'Unable to connect to OpenAI service. Please try again later.'
           },
           { status: 503 }
         );
