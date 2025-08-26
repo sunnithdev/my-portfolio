@@ -132,17 +132,10 @@ Here are your details:
 
 export async function POST(req: NextRequest) {
   try {
-    // Debug logging for environment variables
-    console.log('Environment check:', {
-      hasApiKey: !!process.env.OPENAI_API_KEY,
-      apiKeyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
-      nodeEnv: process.env.NODE_ENV,
-      allEnvKeys: Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('API'))
-    });
+
 
     // Check for API key first
     if (!process.env.OPENAI_API_KEY) {
-      console.error('OpenAI API key is missing from environment variables');
       return NextResponse.json(
         { 
           error: 'OpenAI API key not configured. Please check your environment variables.',
@@ -154,7 +147,6 @@ export async function POST(req: NextRequest) {
 
     // Validate API key format (basic check)
     if (process.env.OPENAI_API_KEY.trim() === '') {
-      console.error('OpenAI API key is empty');
       return NextResponse.json(
         { 
           error: 'OpenAI API key is empty',
@@ -193,14 +185,13 @@ export async function POST(req: NextRequest) {
     
     // Validate messages
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      console.error('Invalid or empty messages array:', messages);
       return NextResponse.json(
         { error: 'Invalid message format' },
         { status: 400 }
       );
     }
 
-    console.log('Processing chat request with messages:', messages.length);
+
 
     // Prepare messages for OpenAI (including system prompt)
     const openaiMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
@@ -211,7 +202,7 @@ export async function POST(req: NextRequest) {
       }))
     ];
 
-    console.log('Sending request to OpenAI with messages length:', openaiMessages.length);
+
 
     // Call OpenAI API
     const completion = await openai.chat.completions.create({
@@ -227,7 +218,7 @@ export async function POST(req: NextRequest) {
       throw new Error('No response from OpenAI');
     }
 
-    console.log('Received response from OpenAI, length:', response.length);
+
 
     return NextResponse.json(
       { response },
@@ -240,8 +231,6 @@ export async function POST(req: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('Chat API error:', error);
-    
     // More specific error handling
     if (error instanceof Error) {
       if (error.message.includes('API_KEY_INVALID') || error.message.includes('API key')) {

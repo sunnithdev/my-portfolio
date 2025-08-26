@@ -68,7 +68,6 @@ const Chat = () => {
     setTimeout(() => scrollToBottom(), 50)
 
     try {
-      console.log('Sending chat request...')
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -82,15 +81,10 @@ const Chat = () => {
         }),
       })
 
-      console.log('Response status:', response.status)
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()))
-      
       const data = await response.json()
-      console.log('Response data:', data)
       
       if (!response.ok) {
         // Handle API errors with specific messages
-        console.error('API error:', data)
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -113,7 +107,6 @@ const Chat = () => {
       // Scroll to bottom after assistant message is added
       setTimeout(() => scrollToBottom(), 100)
     } catch (error) {
-      console.error('Chat error:', error)
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

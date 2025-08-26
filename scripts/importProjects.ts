@@ -21,10 +21,9 @@ async function importProjects() {
       };
 
       await client.create(doc);
-      console.log(`Project "${project.title}" imported successfully!`);
     }
   } catch (error) {
-    console.error('Error importing projects:', error);
+    // Error handling without logging
   }
 }
 
